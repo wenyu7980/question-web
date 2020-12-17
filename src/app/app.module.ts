@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NZ_I18N, zh_CN} from 'ng-zorro-antd/i18n';
 import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import {NzButtonModule, NzDividerModule, NzInputModule, NzInputNumberModule, NzRadioModule} from 'ng-zorro-antd';
+import {NzButtonModule, NzDividerModule, NzInputModule, NzInputNumberModule, NzRadioModule, NzSwitchModule} from 'ng-zorro-antd';
 import {NzSpaceModule} from 'ng-zorro-antd/space';
 
 registerLocaleData(zh);
@@ -28,7 +28,8 @@ registerLocaleData(zh);
     NzSpaceModule,
     NzInputNumberModule,
     NzInputModule,
-    NzDividerModule
+    NzDividerModule,
+    NzSwitchModule
   ],
   providers: [{provide: NZ_I18N, useValue: zh_CN}],
   bootstrap: [AppComponent]

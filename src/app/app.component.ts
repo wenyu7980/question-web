@@ -13,10 +13,13 @@ export class AppComponent implements OnInit {
   questions: Question[];
   private location: Storage;
   question: Question;
+  mistakes: number[] = [];
 
   index = 0;
   answer: string;
   gotoIndex: FormControl;
+  mistakeMode: boolean;
+  randomMode: boolean;
 
   constructor(private httpClient: HttpClient) {
     this.location = localStorage;
@@ -24,6 +27,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.index = +this.location.getItem('index');
+    // 错题集
+    if (this.location.getItem('mistakes')) {
+      this.mistakes = JSON.parse(this.location.getItem('mistakes'));
+    }
     this.httpClient.get<Question[]>('/assets/questions.json').subscribe(
       data => {
         this.questions = data;
@@ -43,18 +50,59 @@ export class AppComponent implements OnInit {
   }
 
   pre() {
-    this.goto(this.index - 1);
+    let index = this.index - 1;
+    if (this.mistakeMode) {
+      index = this.mistakes?.[0] ?? 0;
+      for (const i of this.mistakes.reverse()) {
+        if (i < this.index) {
+          index = i;
+          break;
+        }
+      }
+    }
+    this.goto(index);
+
   }
 
   next() {
-    this.goto(this.index + 1);
+    let index = this.index + 1;
+    if (this.randomMode) {
+      index = Math.round(Math.random() * 1000) % this.questions.length;
+    }
+    if (this.mistakeMode) {
+      index = this.mistakes?.[0] ?? 0;
+      for (const i of this.mistakes) {
+        if (i > this.index) {
+          index = i;
+          break;
+        }
+      }
+    }
+    this.goto(index);
   }
 
   goto(index: number) {
+    if (index < 0) {
+      index = this.questions.length - 1;
+    }
+    index = index % this.questions.length;
     this.index = index;
     this.question = this.questions[this.index];
     this.answer = '';
     this.location.setItem('index', index + '');
+  }
+
+  answerChange($event: string) {
+    if (this.question.answer !== $event) {
+      for (const i of this.mistakes) {
+        if (i === this.index) {
+          return;
+        }
+      }
+      this.mistakes.push(this.index);
+      this.mistakes = this.mistakes.sort((i, j) => i - j);
+      this.location.setItem('mistakes', JSON.stringify(this.mistakes));
+    }
   }
 }
 

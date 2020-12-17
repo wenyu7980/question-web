@@ -1,17 +1,28 @@
 <div style="padding: 20px;" *ngIf="question">
-  <nz-space nzSize="small">
+  <nz-space>
     <nz-space-item>
-      <button nz-button nzSize="small" (click)="pre()" *ngIf="index!==0">上一题</button>
+      随机模式
+      <nz-switch [(ngModel)]="randomMode"></nz-switch>
+    </nz-space-item>
+    <nz-space-item *ngIf="!this.randomMode">
+      错题模式
+      <nz-switch [(ngModel)]="mistakeMode"></nz-switch>
+    </nz-space-item>
+  </nz-space>
+  <nz-divider></nz-divider>
+  <nz-space>
+    <nz-space-item>
+      <button nz-button (click)="pre()" *ngIf="!this.randomMode">上一题</button>
     </nz-space-item>
     <nz-space-item>
-      <button nz-button nzSize="small" (click)="next()" *ngIf="index!==questions.length">下一题</button>
+      <button nz-button (click)="next()">下一题</button>
     </nz-space-item>
   </nz-space>
   <nz-divider [nzText]="'第'+(index + 1)+'题'"></nz-divider>
   <p style="font-weight: bold">{{question.question}}</p>
   <div style="padding: 20px;">
     <div>选项：</div>
-    <nz-radio-group [(ngModel)]="answer">
+    <nz-radio-group [(ngModel)]="answer" (ngModelChange)="answerChange($event)">
       <label nz-radio nzValue="A">A:{{question.options[0]}}</label>
       <label nz-radio nzValue="B">B:{{question.options[1]}}</label>
       <label nz-radio nzValue="C">C:{{question.options[2]}}</label>
@@ -24,7 +35,7 @@
     <div>{{question.analysis}}</div>
   </div>
   <nz-divider></nz-divider>
-  <div>跳转到：
+  <div>共{{this.questions.length}}题，跳转到：
     <nz-input-number nzMin="1" [nzMax]="questions.length" [formControl]="gotoIndex"></nz-input-number>
   </div>
 </div>
