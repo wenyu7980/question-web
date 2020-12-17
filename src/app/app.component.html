@@ -1,16 +1,16 @@
 <div style="padding: 20px;" *ngIf="question">
   <nz-space>
     <nz-space-item>
-      随机模式
-      <nz-switch [(ngModel)]="randomMode"></nz-switch>
-    </nz-space-item>
-    <nz-space-item *ngIf="!this.randomMode">
       错题模式
       <nz-switch [(ngModel)]="mistakeMode"></nz-switch>
     </nz-space-item>
+    <nz-space-item *ngIf="!this.mistakeMode">
+      随机模式
+      <nz-switch [(ngModel)]="randomMode"></nz-switch>
+    </nz-space-item>
   </nz-space>
   <nz-divider></nz-divider>
-  <nz-space>
+  <nz-space class="button-class">
     <nz-space-item>
       <button nz-button (click)="pre()" *ngIf="!this.randomMode">上一题</button>
     </nz-space-item>
